@@ -1,1 +1,187 @@
-EARLY CANCER PREDICTION USING EPIGENOMICS
+CpG Methylation Biomarkers for Early Detection of Lower-Grade Glioma (LGG)
+
+This repository contains the code, workflows, and documentation for our project on identifying CpG methylation biomarkers for early detection of Lower-Grade Glioma (LGG) using Illumina 450K DNA methylation arrays and an integrative statistical + machine learning pipeline. 
+Course: BCSE497J – Project Review III, VIT Vellore
+Team: Nitya Goyal (22BCE3047), Pratham Rajeev Agrawal (22BCE2800), Saket Upadhyay (22BCE3484)
+Guide: Dr. Reenu Rani
+
+🔍 Background & Motivation
+
+Early diagnosis of gliomas is difficult because clinical symptoms (headache, seizures, cognitive decline) often appear only after substantial tumor growth. Conventional methods such as MRI, histopathology, and invasive biopsy have limitations in detecting microscopic or early-stage LGG and in capturing its molecular heterogeneity.
+
+DNA methylation provides a stable, tumor-specific epigenetic signature, making it a promising biomarker for early tumor detection. Our goal is to design a reproducible methylation-based framework that can separate normal brain tissue from LGG with high sensitivity and interpretability. 
+
+🎯 Project Objectives
+
+Identify early-stage LGG biomarkers from genome-wide DNA methylation (Illumina 450K) data.
+
+Perform differential methylation analysis across ~450,000 CpG sites and shortlist the top 5,000 CpGs using the limma framework.
+
+Integrate statistical and ML approaches (limma, Mutual Information, Elastic Net) to capture both linear and non-linear CpG–phenotype associations.
+
+Annotate CpGs to genes and regulatory regions and study their functional roles in LGG pathogenesis.
+
+Highlight unannotated CpG sites with strong predictive power as potential novel epigenetic biomarkers.
+
+Train ML classifiers (Logistic Regression, Random Forest, XGBoost) and evaluate diagnostic performance (ROC-AUC, PR curves, calibration).
+
+Deliver a reproducible, containerizable pipeline suitable for extension to other cancer types. 
+
+
+✨ Key Features
+
+End-to-end pipeline: Data ingestion → preprocessing → differential analysis → feature selection → model training → visualization.
+
+Hybrid feature selection:
+
+limma: empirical Bayes differential analysis
+
+Mutual Information: non-linear relevance
+
+Elastic Net: sparse linear modeling & feature reduction
+
+Model zoo: Logistic Regression, Random Forest, XGBoost for tumor vs. normal classification.
+
+Rich visualizations: Violin plots, scatter plots, heatmaps for CpG signatures and separation of classes.
+
+Reproducible configuration: YAML/JSON configs, version control, and optional containerization.
+
+Scalable: Designed to handle >400k CpGs and 1000+ samples efficiently. 
+
+🧬 Methodology & System Architecture
+
+The system is a modular analytics pipeline for LGG methylation-based diagnostics:
+
+Data Ingestion
+
+Input: IDAT files or preprocessed β-value matrices from GEO / GDC / UCSC Xena.
+
+Organize samples by type: tumor vs normal.
+
+Validate metadata and sample IDs.
+
+Preprocessing & Harmonization
+
+Parse IDATs using minfi (R).
+
+Compute β-values, perform QC and normalization.
+
+Merge cohorts and construct a unified matrix: samples × CpG sites.
+
+Differential Screening (limma)
+
+Apply limma empirical Bayes linear models to each CpG.
+
+Select top 5,000 CpGs based on moderated statistics (e.g., B-statistic, adjusted p-value).
+
+Feature Selection
+
+Mutual Information (MI):
+
+Rank CpGs by MI with class labels (tumor / normal).
+
+Capture non-linear associations.
+
+Elastic Net Regression:
+
+Fit sparse logistic regression with Elastic Net penalty.
+
+Select CpGs with non-zero coefficients.
+
+Combine/compare top ~200 CpGs from each method.
+
+Annotation & Interpretation
+
+Map CpGs to genes, promoters, CpG islands using Illumina/UCSC annotations.
+
+Separate annotated vs unannotated CpGs; flag novel loci implicated in LGG.
+
+Modeling & Validation
+
+Split into train/validation (and optional test) sets.
+
+Train classifiers:
+
+Logistic Regression
+
+Random Forest
+
+XGBoost
+
+Evaluate:
+
+ROC & AUC
+
+Precision–Recall curves
+
+Calibration and confusion matrices.
+
+Visualization & Reporting
+
+Scatter plots: mean methylation difference vs. MI / Elastic Net coefficient.
+
+Heatmaps: top CpGs showing separation of tumor vs normal.
+
+Violin plots: β-value distributions for top CpGs.
+
+Export ranked CpG tables, model metrics, and figures.
+
+Reproducibility
+
+Config-driven runs (YAML/JSON).
+
+Containerized R + Python environment.
+
+Checksums and version control for all datasets and scripts. 
+Results Summary
+
+The pipeline successfully identified CpG sites with strong discriminative power between LGG and normal brain tissue.
+
+Top CpGs showed:
+
+Hypomethylation in tumors for some loci (indicative of gene reactivation).
+
+Hypermethylation in potential tumor suppressor regions (suggesting transcriptional silencing). 
+
+
+Visualization (heatmaps, scatter plots, violin plots) demonstrate clear separation of tumor and normal clusters.
+
+The combination of Mutual Information and Elastic Net provided robust, interpretable feature sets and reduced redundancy.
+
+The framework is scalable and reproducible, enabling application to larger datasets and other cancer types.
+
+(For exact AUC scores, number of selected CpGs, and top gene names, refer to the tables and figures in the results/ and figures/ directories.)
+
+🔮 Future Work
+
+Planned and potential extensions:
+
+Validate the CpG panel on:
+
+Independent cohorts,
+
+Illumina 850K arrays,
+
+Whole-genome bisulfite sequencing (WGBS).
+
+Integrate gene expression (RNA-seq) to link CpG methylation changes with transcriptional regulation.
+
+Perform survival analysis and subtype-specific modeling under the 2021 WHO CNS classification.
+
+Wrap the pipeline into a command-line tool or web app for easier clinical and research use.
+
+Explore multi-omics fusion (copy number, mutations, methylation, expression) for comprehensive LGG stratification.
+
+👥 Contributors
+
+Nitya Goyal (22BCE3047)
+
+Pratham Rajeev Agrawal (22BCE2800)
+
+Saket Upadhyay (22BCE3484)
+
+Guide: Dr. Reenu Rani, VIT Vellore
+
+📚 Citation
+
+If you use this project or parts of the pipeline in your research, please cite the course project and relevant foundational works (minfi, limma, Elastic Net, scikit-learn, etc.) as listed in the References section of the report/presentation.
